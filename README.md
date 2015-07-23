@@ -11,4 +11,4 @@ To start playing:
 To run the tests: 
 
 1) clone down the repo
-2) run"rspec connect_four_tests.rb"
+2) run "rspec connect_four_tests.rb"
