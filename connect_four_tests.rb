@@ -1,7 +1,7 @@
 require "rspec"
 require_relative "connect_four_game"
 
-## Connect Four Tests ## 
+## CONNECT FOUR TESTS ## 
 
 RSpec.describe Cell do
   it "should create a new cell object" do

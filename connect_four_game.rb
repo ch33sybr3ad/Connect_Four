@@ -1,6 +1,6 @@
 require "awesome_print"
 
-## Connect Four Models ## 
+## CONNECT FOUR MODELS ## 
 
 class Cell
   attr_accessor :player_value, :index, :row, :column
