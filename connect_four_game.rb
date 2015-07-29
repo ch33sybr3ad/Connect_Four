@@ -131,12 +131,5 @@ class Game
   end
 end
 
-new_game = Game.new(6,7)
-# tranpose will give me all the diagonals of the answers 
-print new_game
-new_game.move(1,2)
-print new_game
-
-# new_game.move(2,4)
 
 
