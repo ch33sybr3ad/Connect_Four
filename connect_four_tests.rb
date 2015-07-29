@@ -23,23 +23,23 @@ end
 RSpec.describe Game do
   it "should create game with variable board sizes" do
     new_game = Game.new(6,7)
-    expect(new_game.board.length).to eq(42)
+    expect(new_game.board.flatten.length).to eq(42)
 
     new_game2 = Game.new(4,4)
-    expect(new_game2.board.length).to eq(16)
+    expect(new_game2.board.flatten.length).to eq(16)
   end
 
   it "should drop piece to bottom of board on player move" do
     new_game = Game.new(6,7)
     new_game.move(1,6)
 
-    last_move = new_game.board.find {|cell| cell.index == 41 }
+    last_move = new_game.board.flatten.find {|cell| cell.index == 41 }
     expect(last_move.player_value).to eq(1)
   end 
 
   it "should end the game when player wins" do
     new_game = Game.new(6,7)
-    expect(new_game.board.length).to eq(42)
+    expect(new_game.board.flatten.length).to eq(42)
 
     new_game.move(1,6)
     new_game.move(1,6)
