@@ -19,14 +19,17 @@ class Game
   def initialize(row,column)
     @row = row
     @column = column
-    @board = ("0"*@row*@column).chars.each_with_index.map { |char, index| Cell.new(index,row,column)}
+    # board is stores as a nested array of the rows of the board. 
+    @board = ("0"*@row*@column).chars.each_with_index.map { |char, index| Cell.new(index,row,column)}.each_slice(column).to_a
     @game_over = false
   end
 
   #prints board for different non-regular board size
   def print_board
-    new_board = @board.map { |cell| cell = cell.player_value}
-    new_board.each_slice(@column).to_a.each { |row| p row }
+    @board.each do |row|
+      display = row.map { |cell| cell = cell.player_value}
+      p display
+    end
   end
 
   # method prints board nicely in console (normal 6x7 board only)
@@ -44,7 +47,7 @@ class Game
       | X X X X X X X |
       +-------+-------+
       BOARD
-    @board.each { |cell|
+    @board.flatten.each { |cell|
       display = cell.player_value || " "
       string.sub!(/X/, display.to_s)
     }
@@ -54,7 +57,7 @@ class Game
   # allows player to make a move
   def move(player_value, column)
     # returns array with cell objects in the same column
-    column_array = @board.map.with_index { |cell, index| @board.slice(index,1) if (cell.column == column) }.compact.flatten
+    column_array = @board.map { |row| row = row[column] }
 
     # contains last modified cell
     last_move = nil
@@ -77,8 +80,8 @@ class Game
 
   def check_row(last_move_cell)
     # retrieves row of last_move
-    row_array = @board.map.with_index { |cell, index| @board.slice(index,1) if (cell.row == last_move_cell.row) }.compact.flatten
-    
+    row_array = @board[last_move_cell.row]
+
     scan_array_for_winner(row_array)
   end
 
@@ -86,31 +89,21 @@ class Game
     scan_array_for_winner(column_array)
   end
 
-  # checks the right diagonal \
+  # checks all the right diagonal combinations based on last move \
   def check_right_diagonal(cell)
-    # cannot win if diagonal is not long enough
-    return false if cell.row >= 3 
-    return false if (@column-1-cell.column) <=3
-
-    # returns right diagonal from last move
-    right_diagonal_array = Array.new(4).map.with_index do |value, index| 
-      value = @board[cell.index + index * 8]
-    end
-
+    right_corners = [4,5,6,12,13,20,21,28,29,35,36,37]
+    index = cell.column - cell.row  
+    right_diagonal_array = (0..5).collect { |i| @board[i][i+index] }.compact
+    right_diagonal_array.delete_if {|cell| right_corners.include?(cell.index) }
     scan_array_for_winner(right_diagonal_array)
   end
 
-  # checks the left diagonal /
+  # checks the left diagonal combinations based on last move /
   def check_left_diagonal(cell)
-    # cannot win if diagonal is not long enough
-    return false if cell.row >= 3 
-    return false if (cell.column) <=2
-    
-    # returns left diagonal from last move
-    left_diagonal_array = Array.new(4).map.with_index do |value, index| 
-      value = @board[cell.index + index * 6]
-    end
-
+    left_corners = [0,1,2,7,8,14,27,33,34,39,40,41]
+    index = cell.column + cell.row - 6
+    left_diagonal_array = (0..5).collect { |i| @board[i][6-i+index] }.compact
+    left_diagonal_array.delete_if {|cell| left_corners.include?(cell.index) }
     scan_array_for_winner(left_diagonal_array)
   end
 
@@ -137,5 +130,13 @@ class Game
     end_game
   end
 end
+
+new_game = Game.new(6,7)
+# tranpose will give me all the diagonals of the answers 
+print new_game
+new_game.move(1,2)
+print new_game
+
+# new_game.move(2,4)
 
 
